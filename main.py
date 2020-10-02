@@ -72,10 +72,10 @@ st.markdown(
 st.markdown('''
 <div class="jumbotron text-center" style='background-color: #fff'>
   <h1 style="margin: auto; width: 100%;">COVID-19 Interactive Dashboard</h1>
-  <h3></h3><p style="margin: auto; font-weight: bold; text-align: center; width: 100%;">Data Source: CSSE, John Hopkins University</p>
-  <h2></h2><p style="font-weight: bold; text-align: center; width: 100%;">A IOT Project by Group 27</p>
-  <h2></h2><p style="font-weight: bold; text-align: center; width: 100%;">Indian Institute of Information Technology, Pune</p>
-  <h2>______</h2><br><p style="margin: auto; font-weight: 500; text-align: center; width: 100%; font-size: 50px">World Stats</p>
+  <h2></h2><p style="margin: auto; font-weight: bold; text-align: center; width: 100%;">Data Source: CSSE, John Hopkins University</p>
+  <h2></h2><p style="margin: auto; font-weight: 400; text-align: center; width: 100%;">Last Updated: ''' + str(country_df['last_update'][0]) + '''</p>
+  <h2></h2><p style="margin: auto; font-weight: 400; text-align: center; width: 100%;">( Best viewed on Desktop. Use Landscape mode for Mobile View. )</p>
+  <h2>______</h2><br><br><p style="margin: auto; font-weight: 500; text-align: center; width: 100%; font-size: 50px">World Stats</p>
 </div>
 <div class="jumbotron text-center" style='padding: 0px'>
   <div class="row" style="background-color: #fff;width: 100%; margin: auto;">
@@ -98,34 +98,70 @@ st.markdown('''
 </div>
 ''', unsafe_allow_html=True);
 
-st.title('COVID-19 : Total, Deaths and Recovered')
+st.title('COVID-19 Total, Death and Recovered Cases for Top 20 countries with maximum cases')
 
-country_stats_df = country_df[['country','confirmed', 'deaths', 'recovered']]
+country_stats_df = country_df[['country', 'last_update','confirmed', 'deaths', 'recovered']]
 # country_df.sort_values('confirmed', ascending= False).head(10).style.background_gradient(cmap='copper')
 fig = go.FigureWidget( layout=go.Layout() )
 def highlight_col(x):
     red = 'color: #e73631'
     black = 'color: #000'
     green = 'color: #70a82c'
-    df1 = pd.DataFrame('', index= x.index, columns=x.columns)
-    df1.iloc[:, 1] = black
-    df1.iloc[:, 2] = red
-    df1.iloc[:, 3] = green
+    df1 = pd.DataFrame('', index=x.index, columns=x.columns)
+    df1.iloc[:, 2] = black
+    df1.iloc[:, 3] = red
+    df1.iloc[:, 4] = green
     return df1
 
 def show_latest_cases(n):
     n = int(n)
     if n>0:
-        return country_stats_df.sort_values('confirmed', ascending= False).reset_index(drop=True).head(n).style.apply(highlight_col, axis=None).set_properties(**{'text-align': 'right', 'font-size': '15px'})
+        return country_stats_df.sort_values('confirmed', ascending= False).reset_index(drop=True).head(n).style.apply(highlight_col, axis=None).set_properties(**{'text-align': 'left', 'font-size': '15px'})
 
 to_show = show_latest_cases(21)
 st.table(to_show)
 
-# st.markdown(
-#     '''
-#     <iframe src='https://flo.uri.sh/visualisation/1889889/embed' frameborder='0' scrolling='no' style='width:100%;height:600px;'></iframe><div style='width:100%!;margin-top:4px!important;text-align:right!important;'></div>
-#     ''',unsafe_allow_html=True
-# )
+# df = confirmed_df
+# bcr.bar_chart_race(
+#     df=df,
+#     filename='covid19_horiz.mp4',
+#     orientation='h',
+#     sort='desc',
+#     n_bars=10,
+#     fixed_order=False,
+#     fixed_max=True,
+#     steps_per_period=10,
+#     interpolate_period=False,
+#     label_bars=True,
+#     bar_size=.95,
+#     period_label={'x': .99, 'y': .25, 'ha': 'right', 'va': 'center'},
+#     period_fmt='%B %d, %Y',
+#     period_summary_func=lambda v, r: {'x': .99, 'y': .18,
+#                                       's': f'Total deaths: {v.nlargest(6).sum():,.0f}',
+#                                       'ha': 'right', 'size': 8, 'family': 'Courier New'},
+#     perpendicular_bar_func='median',
+#     period_length=500,
+#     figsize=(5, 3),
+#     dpi=144,
+#     cmap='dark12',
+#     title='COVID-19 Confirmed Cases by Country',
+#     title_size='',
+#     bar_label_size=7,
+#     tick_label_size=7,
+#     shared_fontdict={'family' : 'Helvetica', 'color' : '.1'},
+#     scale='linear',
+#     writer=None,
+#     fig=None,
+#     bar_kwargs={'alpha': .7},
+#     filter_column_colors=False)
+
+# bcr.bar_chart_race(df=df, filename=None)
+HtmlFile = open("temp-plot.html", 'r', encoding='utf-8')
+source = HtmlFile.read()
+end_tag = "</head>"
+source = source[source.find(end_tag)+len(end_tag):]
+st.markdown(source, unsafe_allow_html=True)
+
 
 def plot_cases_of_a_country(country):
     labels = ['Confirmed', 'Deaths', 'Recovered']
@@ -268,24 +304,23 @@ show_country_stats(country_name)
 
 sorted_country_df = country_df.sort_values('confirmed', ascending= False)
 
-# def bubble_chart(n):
-#     fig = px.scatter(sorted_country_df.head(n), x="country", y="confirmed", size="confirmed", color="country",
-#                hover_name="country", size_max=60)
-#     fig.update_layout(
-#     title=str(n) +" Worst hit countries",
-#     xaxis_title="Countries",
-#     yaxis_title="Confirmed Cases",
-#     width = 700,
-#     )
-#     fig.show();
-
-# bubble_chart(10)
-
-# st.title('Top 10 worst hit coutries')
-# st.write(bubble_chart(10))
+def bubble_chart(n):
+	fig = px.scatter(sorted_country_df.head(n), x="country", y="confirmed", size="confirmed", color="country",
+               hover_name="country", size_max=60)
+	fig.update_layout(
+    	xaxis_title="Countries",
+    	yaxis_title="Confirmed Cases",
+    	width = 700
+    	);
+	return fig
 
 st.write(to_show_overall)
 st.write(to_show_daily)
+
+st.title('Top 10 worst hit coutries')
+st.title('')
+st.write(bubble_chart(10))
+
 
 st.markdown(
     '''
