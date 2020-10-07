@@ -13,7 +13,9 @@ pip install streamlit
 pip install plotly
 ```
 
-To run the file, 
+To run the main file in localhost, 
 ```
 streamlit run main.py
 ```
+
+For deployment purpose we have used herokuapp, check it out here - http://covid19-group27.herokuapp.com
