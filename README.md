@@ -5,11 +5,12 @@ Data Source - CSSE, John Hopkins University
 
 Creators - Group 27.
 
-This project is done using Streamlit package provided by Python. 
+This project is done using Streamlit package provided by Python. We have also used plotly library for visualisation purposes.
 
-To install streamlit, 
+To install streamlit and plotly, 
 ```
 pip install streamlit
+pip install plotly
 ```
 
 To run the file, 
