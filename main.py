@@ -121,48 +121,6 @@ def show_latest_cases(n):
 to_show = show_latest_cases(21)
 st.table(to_show)
 
-# df = confirmed_df
-# bcr.bar_chart_race(
-#     df=df,
-#     filename='covid19_horiz.mp4',
-#     orientation='h',
-#     sort='desc',
-#     n_bars=10,
-#     fixed_order=False,
-#     fixed_max=True,
-#     steps_per_period=10,
-#     interpolate_period=False,
-#     label_bars=True,
-#     bar_size=.95,
-#     period_label={'x': .99, 'y': .25, 'ha': 'right', 'va': 'center'},
-#     period_fmt='%B %d, %Y',
-#     period_summary_func=lambda v, r: {'x': .99, 'y': .18,
-#                                       's': f'Total deaths: {v.nlargest(6).sum():,.0f}',
-#                                       'ha': 'right', 'size': 8, 'family': 'Courier New'},
-#     perpendicular_bar_func='median',
-#     period_length=500,
-#     figsize=(5, 3),
-#     dpi=144,
-#     cmap='dark12',
-#     title='COVID-19 Confirmed Cases by Country',
-#     title_size='',
-#     bar_label_size=7,
-#     tick_label_size=7,
-#     shared_fontdict={'family' : 'Helvetica', 'color' : '.1'},
-#     scale='linear',
-#     writer=None,
-#     fig=None,
-#     bar_kwargs={'alpha': .7},
-#     filter_column_colors=False)
-
-# bcr.bar_chart_race(df=df, filename=None)
-HtmlFile = open("temp-plot.html", 'r', encoding='utf-8')
-source = HtmlFile.read()
-end_tag = "</head>"
-source = source[source.find(end_tag)+len(end_tag):]
-st.markdown(source, unsafe_allow_html=True)
-
-
 def plot_cases_of_a_country(country):
     labels = ['Confirmed', 'Deaths', 'Recovered']
     colors = ['black', 'red', 'green']
